@@ -1,0 +1,38 @@
+version:  '3'
+        
+services:
+    dbos:
+      image: mysql:5.7
+      volumes:
+        - mysql_storage:/var/lib/mysql
+      restart: always
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_USER: siddharth
+        MYSQL_PASSWORD: siddharth
+        MYSQL_DATABASE: scores
+
+
+
+    server_files:
+      image: php_server:latest
+      restart: always
+      depends_on:
+        - dbos
+      ports:
+        - 8081:80
+      volumes:
+        - /root/php_files:/var/www/html
+        
+    client_files:
+      image: httpd:latest
+      restart: always
+      depends_on:
+        - dbos
+      ports:
+        - 8080:80
+      volumes:
+        - /root/webgl:/var/www/html
+  
+volumes:
+    wp_storage:
